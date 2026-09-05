@@ -1,0 +1,80 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect Soniox",
+        "description": "Create a project and API key at console.soniox.com. The region must match the project's data residency.",
+        "data": {
+          "api_key": "API key",
+          "region": "Region"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Reconnect Soniox",
+        "data": {
+          "api_key": "API key",
+          "region": "Region"
+        }
+      },
+      "reconfigure": {
+        "title": "Update Soniox credentials",
+        "data": {
+          "api_key": "API key",
+          "region": "Region"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Soniox rejected this API key (for this region).",
+      "cannot_connect": "Soniox could not be reached."
+    },
+    "abort": {
+      "single_instance_allowed": "Only one Soniox entry is supported.",
+      "reauth_successful": "Credentials updated.",
+      "reconfigure_successful": "Credentials updated."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Soniox options",
+        "data": {
+          "language": "Speech-to-text language",
+          "stt_model": "Speech-to-text model",
+          "context_terms": "Vocabulary (terms)",
+          "context_text": "Context (free text)",
+          "speaker_id_url": "Speaker identification URL",
+          "speaker_threshold": "Speaker confidence threshold",
+          "tts_model": "Text-to-speech model",
+          "tts_voice": "Voice",
+          "tts_speed": "Speaking speed"
+        },
+        "data_description": {
+          "language": "Automatic follows the Assist pipeline language; a fixed language is sent as a strict hint.",
+          "context_terms": "Names, products and commands that are often misheard, comma or newline separated. Sent as Soniox context.terms.",
+          "context_text": "Background text describing the domain, sent as Soniox context.text.",
+          "speaker_id_url": "Optional. A pyannote-style endpoint that receives the utterance as WAV and returns {speaker, confidence}. The transcript is prefixed with [Speaker: NAME].",
+          "speaker_threshold": "Minimum confidence before the speaker prefix is added.",
+          "tts_voice": "Every Soniox voice speaks every supported language.",
+          "tts_speed": "0.7 (slow) to 1.3 (fast)."
+        }
+      }
+    }
+  },
+  "selector": {
+    "region": {
+      "options": {
+        "us": "United States (default)",
+        "eu": "European Union"
+      }
+    }
+  },
+  "entity": {
+    "stt": {
+      "speech_to_text": { "name": "Speech-to-text" }
+    },
+    "tts": {
+      "text_to_speech": { "name": "Text-to-speech" }
+    }
+  }
+}

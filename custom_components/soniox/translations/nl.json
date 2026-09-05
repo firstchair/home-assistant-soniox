@@ -1,0 +1,64 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Soniox koppelen",
+        "description": "Maak een project en API-key aan op console.soniox.com. De regio moet overeenkomen met de data-residency van het project.",
+        "data": { "api_key": "API-key", "region": "Regio" }
+      },
+      "reauth_confirm": {
+        "title": "Soniox opnieuw koppelen",
+        "data": { "api_key": "API-key", "region": "Regio" }
+      },
+      "reconfigure": {
+        "title": "Soniox-gegevens bijwerken",
+        "data": { "api_key": "API-key", "region": "Regio" }
+      }
+    },
+    "error": {
+      "invalid_auth": "Soniox wijst deze API-key af (voor deze regio).",
+      "cannot_connect": "Soniox is niet bereikbaar."
+    },
+    "abort": {
+      "single_instance_allowed": "Er kan maar één Soniox-koppeling zijn.",
+      "reauth_successful": "Gegevens bijgewerkt.",
+      "reconfigure_successful": "Gegevens bijgewerkt."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Soniox-opties",
+        "data": {
+          "language": "Taal spraakherkenning",
+          "stt_model": "Model spraakherkenning",
+          "context_terms": "Vocabulaire (termen)",
+          "context_text": "Context (vrije tekst)",
+          "speaker_id_url": "URL sprekerherkenning",
+          "speaker_threshold": "Drempel sprekerzekerheid",
+          "tts_model": "Model tekst-naar-spraak",
+          "tts_voice": "Stem",
+          "tts_speed": "Spreeksnelheid"
+        },
+        "data_description": {
+          "language": "Automatisch volgt de taal van de Assist-pipeline; een vaste taal gaat als strikte hint mee.",
+          "context_terms": "Namen, producten en commando's die vaak verkeerd verstaan worden, gescheiden door komma's of regels. Gaat mee als Soniox context.terms.",
+          "context_text": "Achtergrondtekst over het domein, gaat mee als Soniox context.text.",
+          "speaker_id_url": "Optioneel. Een pyannote-achtig endpoint dat de opname als WAV krijgt en {speaker, confidence} teruggeeft. De tekst krijgt dan [Speaker: NAAM] ervoor.",
+          "speaker_threshold": "Minimale zekerheid voordat de spreker-tag wordt toegevoegd.",
+          "tts_voice": "Elke Soniox-stem spreekt elke ondersteunde taal.",
+          "tts_speed": "0,7 (langzaam) tot 1,3 (snel)."
+        }
+      }
+    }
+  },
+  "selector": {
+    "region": {
+      "options": { "us": "Verenigde Staten (standaard)", "eu": "Europese Unie" }
+    }
+  },
+  "entity": {
+    "stt": { "speech_to_text": { "name": "Spraak naar tekst" } },
+    "tts": { "text_to_speech": { "name": "Tekst naar spraak" } }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "domain": "soniox",
+  "name": "Soniox",
+  "codeowners": ["@firstchair"],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/firstchair/home-assistant-soniox",
+  "integration_type": "service",
+  "iot_class": "cloud_push",
+  "issue_tracker": "https://github.com/firstchair/home-assistant-soniox/issues",
+  "requirements": [],
+  "single_config_entry": true,
+  "version": "0.1.0"
+}
