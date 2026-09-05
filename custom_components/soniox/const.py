@@ -23,6 +23,7 @@ CONF_SPEAKER_THRESHOLD = "speaker_threshold"
 CONF_TTS_MODEL = "tts_model"
 CONF_TTS_VOICE = "tts_voice"
 CONF_TTS_SPEED = "tts_speed"
+CONF_TTS_EMOTION = "tts_emotion"
 
 AUTO_LANGUAGE = "auto"
 
@@ -34,14 +35,56 @@ DEFAULT_REGION = REGION_US
 DEFAULT_STT_MODEL = "stt-rt-v5"
 DEFAULT_TTS_MODEL = "tts-rt-v2"
 DEFAULT_TTS_SPEED = 1.0
+DEFAULT_TTS_EMOTION = "neutral"
 DEFAULT_SPEAKER_THRESHOLD = 0.5
 
 TTS_SPEED_MIN = 0.7
 TTS_SPEED_MAX = 1.3
 TTS_STREAM_SAMPLE_RATE = 24000
 
+# Soniox TTS v2 audio tags (docs: /docs/tts/concepts/emotion-and-tone). Tags are
+# always English, placed before the text they affect. "neutral" = no tag.
+# Users can also write any tag inline in the message; text is passed verbatim.
+TTS_EMOTIONS: tuple[str, ...] = (
+    "neutral",
+    # emotions
+    "happy",
+    "sad",
+    "angry",
+    "excited",
+    "nervous",
+    "fearful",
+    "surprised",
+    "annoyed",
+    "relieved",
+    "disappointed",
+    "curious",
+    "delighted",
+    "calm",
+    # tone & manner
+    "warm",
+    "stern",
+    "serious",
+    "playful",
+    "sarcastic",
+    "flirty",
+    "deadpan",
+    "sincerely",
+    "reassuringly",
+    "dramatically",
+    "mockingly",
+    # volume & pace
+    "whispering",
+    "softly",
+    "loudly",
+    "slowly",
+    "quickly",
+    "hesitantly",
+)
+
 # tts.speak option keys (match the CONF_* names so one string works in both places).
 ATTR_SPEED = "speed"
+ATTR_EMOTION = "emotion"
 
 # Endpoints per region. Data residency is set per Soniox project; the API key
 # of an EU project only works against the EU hosts.

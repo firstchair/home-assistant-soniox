@@ -20,10 +20,13 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from . import SonioxConfigEntry
 from .api import SonioxApiError, SonioxAuthError, SonioxConnectionError, SonioxError
 from .const import (
+    ATTR_EMOTION,
     ATTR_SPEED,
+    CONF_TTS_EMOTION,
     CONF_TTS_MODEL,
     CONF_TTS_SPEED,
     CONF_TTS_VOICE,
+    DEFAULT_TTS_EMOTION,
     DEFAULT_TTS_MODEL,
     DEFAULT_TTS_SPEED,
     DOMAIN,
@@ -33,7 +36,7 @@ from .const import (
     TTS_SPEED_MIN,
     TTS_STREAM_SAMPLE_RATE,
 )
-from .helpers import expand_language_tags, normalize_language, wav_stream_header
+from .helpers import apply_audio_tag, expand_language_tags, normalize_language, wav_stream_header
 
 
 async def async_setup_entry(
@@ -80,7 +83,7 @@ class SonioxTtsEntity(TextToSpeechEntity):
     @property
     def supported_options(self) -> list[str]:
         """Per-call options accepted by tts.speak."""
-        return [ATTR_VOICE, ATTR_SPEED]
+        return [ATTR_VOICE, ATTR_SPEED, ATTR_EMOTION]
 
     @property
     def default_options(self) -> dict[str, Any]:
@@ -88,7 +91,11 @@ class SonioxTtsEntity(TextToSpeechEntity):
         return {
             ATTR_VOICE: self._configured_voice,
             ATTR_SPEED: float(self._entry.options.get(CONF_TTS_SPEED, DEFAULT_TTS_SPEED)),
+            ATTR_EMOTION: self._entry.options.get(CONF_TTS_EMOTION, DEFAULT_TTS_EMOTION),
         }
+
+    def _emotion(self, options: dict[str, Any]) -> str:
+        return str(options.get(ATTR_EMOTION) or self._entry.options.get(CONF_TTS_EMOTION, DEFAULT_TTS_EMOTION))
 
     @property
     def _configured_voice(self) -> str:
@@ -110,6 +117,7 @@ class SonioxTtsEntity(TextToSpeechEntity):
         voice = str(options.get(ATTR_VOICE) or self._configured_voice)
         speed = _clamp_speed(options.get(ATTR_SPEED, self._entry.options.get(CONF_TTS_SPEED, DEFAULT_TTS_SPEED)))
         lang = normalize_language(language) or self._default_language
+        message = apply_audio_tag(message, self._emotion(options))
         try:
             audio = await self._client.async_tts(
                 text=message,
@@ -139,7 +147,7 @@ class SonioxTtsEntity(TextToSpeechEntity):
         failure before any audio exists falls back to the non-streaming path
         instead of leaving Home Assistant with a stream that goes silent.
         """
-        recorder = _Recorder(request.message_gen)
+        recorder = _Recorder(request.message_gen, lead=apply_audio_tag("", self._emotion(request.options)))
         voice = str(request.options.get(ATTR_VOICE) or self._configured_voice)
         speed = _clamp_speed(
             request.options.get(ATTR_SPEED, self._entry.options.get(CONF_TTS_SPEED, DEFAULT_TTS_SPEED))
@@ -159,7 +167,9 @@ class SonioxTtsEntity(TextToSpeechEntity):
             await chunks.aclose()
             LOGGER.warning("Soniox streaming TTS produced no audio (%s) — falling back to REST", err)
             message = await recorder.drain()
-            ext, data = await self.async_get_tts_audio(message, request.language, dict(request.options))
+            # The recorder already carries the tag; don't add it twice.
+            opts = {**request.options, ATTR_EMOTION: DEFAULT_TTS_EMOTION}
+            ext, data = await self.async_get_tts_audio(message, request.language, opts)
 
             async def _single() -> AsyncGenerator[bytes]:
                 yield data
@@ -181,11 +191,16 @@ class SonioxTtsEntity(TextToSpeechEntity):
 class _Recorder:
     """Forward a text stream while keeping a copy, so a fallback can replay it whole."""
 
-    def __init__(self, source: AsyncIterable[str]) -> None:
+    def __init__(self, source: AsyncIterable[str], lead: str = "") -> None:
         self._source = source
+        # Audio tag (e.g. "[excited] ") emitted before the first text chunk.
+        self._lead = lead
         self.text = ""
 
     async def stream(self) -> AsyncGenerator[str]:
+        if self._lead:
+            self.text += self._lead
+            yield self._lead
         async for chunk in self._source:
             self.text += chunk
             yield chunk

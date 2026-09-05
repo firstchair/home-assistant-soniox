@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from custom_components.soniox.helpers import (
+    apply_audio_tag,
     build_context,
     expand_language_tags,
     normalize_language,
@@ -57,3 +58,15 @@ def test_pcm_to_wav_header() -> None:
     assert wav[:4] == b"RIFF" and wav[8:12] == b"WAVE" and wav[36:40] == b"data"
     assert len(wav) == 44 + 16
     assert int.from_bytes(wav[24:28], "little") == 16000
+
+
+def test_apply_audio_tag() -> None:
+    assert apply_audio_tag("Hallo", "excited") == "[excited] Hallo"
+    assert apply_audio_tag("Hallo", "[Warm]") == "[warm] Hallo"
+    assert apply_audio_tag("Hallo", "neutral") == "Hallo"
+    assert apply_audio_tag("Hallo", None) == "Hallo"
+    # inline tag written by the caller wins
+    assert apply_audio_tag("[whispering] sst", "excited") == "[whispering] sst"
+    # lead for the streaming path
+    assert apply_audio_tag("", "calm") == "[calm] "
+    assert apply_audio_tag("", "neutral") == ""

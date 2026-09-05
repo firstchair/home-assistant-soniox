@@ -54,6 +54,7 @@ Copy `custom_components/soniox` into your `config/custom_components/` directory 
 | Speaker confidence threshold | 0.5 | Minimum confidence for the `[Speaker: …]` prefix. |
 | Text-to-speech model | `tts-rt-v2` | |
 | Voice | first voice of the model | Any voice from the model's list. |
+| Emotion / tone | neutral | A Soniox audio tag placed before every message (`[warm]`, `[excited]`, `[calm]`, …). Overridable per call via `options: {emotion: playful}`. |
 | Speaking speed | 1.0 | 0.7–1.3, also overridable per `tts.speak` call via `options: {speed: 1.1}`. |
 
 ### `tts.speak` options
@@ -69,7 +70,19 @@ data:
   options:
     voice: Mina
     speed: 1.1
+    emotion: warm
 ```
+
+### Emotion and audio tags
+
+Soniox TTS v2 is steered with **audio tags** in the text itself, always in English, placed before the words they affect: emotions (`[happy]`, `[sad]`, `[excited]`, `[calm]`, `[relieved]`…), tone (`[warm]`, `[stern]`, `[playful]`, `[sarcastic]`, `[reassuringly]`…), sounds (`[laughs]`, `[sighs]`, `[gasps]`, `[clears throat]`…), volume and pace (`[whispering]`, `[loudly]`, `[slowly]`, `[hesitantly]`…) and pauses (`[pause]`, `[long pause]`). See Soniox's [Emotion & tone](https://soniox.com/docs/tts/concepts/emotion-and-tone) page for the full list.
+
+The integration exposes this two ways:
+
+- **Default emotion** in Configure (or `emotion` in `tts.speak` options) → one tag is put in front of the whole message. Pick `neutral` for none.
+- **Inline tags** are passed through verbatim, so a conversation agent can write `[sighs] De vaatwasser is alweer vol.` and get exactly that. A message that already starts with a tag is never given a second one.
+
+Uppercase words are shouted, `*asterisks*` add stress, `...` and `—` add pauses. Tags apply to the streaming path as well: the tag is sent as the first text chunk.
 
 ## How it works
 

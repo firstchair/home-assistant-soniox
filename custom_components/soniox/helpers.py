@@ -72,6 +72,21 @@ def speaker_prefix(speaker: str | None, confidence: float, threshold: float) -> 
     return f"[Speaker: {speaker}] "
 
 
+_LEADING_TAG = re.compile(r"^\s*\[[a-z][a-z -]*\]", re.IGNORECASE)
+
+
+def apply_audio_tag(text: str, tag: str | None) -> str:
+    """Prefix ``text`` with a Soniox audio tag such as ``[excited]``.
+
+    ``neutral``/empty means no tag. A message that already starts with a tag
+    is left alone, so inline tags written by the caller win over the default.
+    """
+    tag = (tag or "").strip().strip("[]").lower()
+    if not tag or tag == "neutral" or _LEADING_TAG.match(text):
+        return text
+    return f"[{tag}] {text}" if text else f"[{tag}] "
+
+
 def pcm_to_wav(pcm: bytes, sample_rate: int = 16000, channels: int = 1, bits: int = 16) -> bytes:
     """Wrap raw little-endian PCM in a minimal RIFF/WAVE header."""
     byte_rate = sample_rate * channels * bits // 8
