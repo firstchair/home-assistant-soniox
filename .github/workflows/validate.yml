@@ -20,6 +20,8 @@ jobs:
       - uses: hacs/action@main
         with:
           category: integration
+          # Not (yet) in home-assistant/brands; HACS itself installs fine without.
+          ignore: brands
 
   tests:
     runs-on: ubuntu-latest

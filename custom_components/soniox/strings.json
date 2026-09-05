@@ -54,7 +54,7 @@
           "language": "Automatic follows the Assist pipeline language; a fixed language is sent as a strict hint.",
           "context_terms": "Names, products and commands that are often misheard, comma or newline separated. Sent as Soniox context.terms.",
           "context_text": "Background text describing the domain, sent as Soniox context.text.",
-          "speaker_id_url": "Optional. A pyannote-style endpoint that receives the utterance as WAV and returns {speaker, confidence}. The transcript is prefixed with [Speaker: NAME].",
+          "speaker_id_url": "Optional. A pyannote-style endpoint that receives the utterance as WAV and returns JSON with speaker and confidence. The transcript is prefixed with [Speaker: NAME].",
           "speaker_threshold": "Minimum confidence before the speaker prefix is added.",
           "tts_voice": "Every Soniox voice speaks every supported language.",
           "tts_emotion": "Soniox audio tag placed before every message, e.g. [warm] or [excited]. Inline tags in the message itself always win. neutral = none.",

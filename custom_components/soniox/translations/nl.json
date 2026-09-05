@@ -54,7 +54,7 @@
           "language": "Automatisch volgt de taal van de Assist-pipeline; een vaste taal gaat als strikte hint mee.",
           "context_terms": "Namen, producten en commando's die vaak verkeerd verstaan worden, gescheiden door komma's of regels. Gaat mee als Soniox context.terms.",
           "context_text": "Achtergrondtekst over het domein, gaat mee als Soniox context.text.",
-          "speaker_id_url": "Optioneel. Een pyannote-achtig endpoint dat de opname als WAV krijgt en {speaker, confidence} teruggeeft. De tekst krijgt dan [Speaker: NAAM] ervoor.",
+          "speaker_id_url": "Optioneel. Een pyannote-achtig endpoint dat de opname als WAV krijgt en JSON met speaker en confidence teruggeeft. De tekst krijgt dan [Speaker: NAAM] ervoor.",
           "speaker_threshold": "Minimale zekerheid voordat de spreker-tag wordt toegevoegd.",
           "tts_voice": "Elke Soniox-stem spreekt elke ondersteunde taal.",
           "tts_emotion": "Soniox-audiotag die vóór elk bericht komt, bv. [warm] of [excited]. Tags in het bericht zelf winnen altijd. neutral = geen.",
