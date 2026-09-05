@@ -2,6 +2,12 @@
 
 All notable changes to this integration are documented here. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.1.1] - 2026-09-05
+
+### Added
+
+- Cloned voices (`GET /v1/voices`) are listed first in the voice dropdown and in Assist's voice picker, marked ★, so a custom voice can be selected without copying its UUID.
+
 ## [0.1.0] - 2026-09-05
 
 ### Added

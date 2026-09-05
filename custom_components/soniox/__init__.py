@@ -54,12 +54,18 @@ async def async_setup_entry(hass: HomeAssistant, entry: SonioxConfigEntry) -> bo
     except (SonioxConnectionError, SonioxApiError) as err:
         raise ConfigEntryNotReady from err
 
-    # Voices are nice-to-have: a failure here must not block STT.
+    # Voices are nice-to-have: a failure here must not block STT. Cloned voices
+    # (console → Voices, or POST /v1/voices) are listed first so they are easy
+    # to find among the 90+ built-in ones.
+    voices: list[dict[str, str]] = []
     try:
-        voices = await client.async_get_tts_voices(entry.options.get(CONF_TTS_MODEL, DEFAULT_TTS_MODEL))
+        voices = await client.async_get_custom_voices()
+    except (SonioxConnectionError, SonioxApiError) as err:
+        LOGGER.warning("Could not fetch Soniox cloned voices: %s", err)
+    try:
+        voices += await client.async_get_tts_voices(entry.options.get(CONF_TTS_MODEL, DEFAULT_TTS_MODEL))
     except (SonioxConnectionError, SonioxApiError) as err:
         LOGGER.warning("Could not fetch Soniox TTS voices: %s", err)
-        voices = []
 
     entry.runtime_data = SonioxRuntimeData(client=client, stt_languages=languages, tts_voices=voices)
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)

@@ -62,7 +62,13 @@ def _voice_selector(voices: list[dict[str, str]]) -> Any:
     options = [
         selector.SelectOptionDict(
             value=v["id"],
-            label=f"{v['id']} — {v['gender']} — {v['description'][:60]}" if v.get("description") else v["id"],
+            label=(
+                f"★ {v.get('name') or v['id']} — {v['description']}"
+                if v.get("gender") == "custom"
+                else f"{v['id']} — {v['gender']} — {v['description'][:60]}"
+                if v.get("description")
+                else v["id"]
+            ),
         )
         for v in voices
     ]

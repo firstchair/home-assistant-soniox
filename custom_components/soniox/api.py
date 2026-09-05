@@ -113,6 +113,34 @@ class SonioxClient:
                 ]
         return []
 
+    async def async_get_custom_voices(self) -> list[dict[str, str]]:
+        """Return the organization's cloned voices as ``{id, description, gender}`` dicts.
+
+        Cloned voices are referenced by UUID in the ``voice`` field, exactly like
+        built-in names, and speak every supported language.
+        """
+        data = await self._get_json("/voices?limit=100")
+        voices = data.get("voices", data) if isinstance(data, dict) else data
+        out: list[dict[str, str]] = []
+        for v in voices or []:
+            if not v.get("id"):
+                continue
+            statuses = {str(m.get("status", "")) for m in v.get("models", []) if isinstance(m, dict)}
+            state = (
+                "ready"
+                if not statuses or "ready" in statuses or "completed" in statuses
+                else ",".join(sorted(statuses))
+            )
+            out.append(
+                {
+                    "id": str(v["id"]),
+                    "name": str(v.get("name") or v["id"]),
+                    "description": f"Cloned voice ({state})",
+                    "gender": "custom",
+                }
+            )
+        return out
+
     async def async_tts(
         self,
         *,

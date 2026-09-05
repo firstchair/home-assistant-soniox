@@ -77,6 +77,12 @@ data:
     emotion: warm
 ```
 
+### Cloned voices
+
+Soniox can clone a voice from a clean, single-speaker clip of at most two minutes (35 MB): upload it in the console under *Voices*, or `POST https://api.soniox.com/v1/voices` with `name` and `file`. Processing takes seconds; up to 20 voices per organization. The clone speaks all 60+ languages with the same identity and can be used everywhere a built-in voice name goes, including audio tags and streaming.
+
+The integration lists your cloned voices at the top of the voice dropdown (marked ★) and in Assist's voice picker, so no manual UUID copying is needed. New clones appear after a reload of the integration. Only clone voices you have permission to use.
+
 ### Emotion and audio tags
 
 Soniox TTS v2 is steered with **audio tags** in the text itself, always in English, placed before the words they affect: emotions (`[happy]`, `[sad]`, `[excited]`, `[calm]`, `[relieved]`…), tone (`[warm]`, `[stern]`, `[playful]`, `[sarcastic]`, `[reassuringly]`…), sounds (`[laughs]`, `[sighs]`, `[gasps]`, `[clears throat]`…), volume and pace (`[whispering]`, `[loudly]`, `[slowly]`, `[hesitantly]`…) and pauses (`[pause]`, `[long pause]`). See Soniox's [Emotion & tone](https://soniox.com/docs/tts/concepts/emotion-and-tone) page for the full list.

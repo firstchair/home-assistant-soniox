@@ -107,10 +107,7 @@ class SonioxTtsEntity(TextToSpeechEntity):
     @callback
     def async_get_supported_voices(self, language: str) -> list[Voice] | None:
         """Voices are language-independent, so the same list for every language."""
-        return [
-            Voice(voice_id=v["id"], name=f"{v['id']} ({v['gender']})" if v.get("gender") else v["id"])
-            for v in self._voices
-        ] or None
+        return [Voice(voice_id=v["id"], name=_voice_label(v)) for v in self._voices] or None
 
     async def async_get_tts_audio(self, message: str, language: str, options: dict[str, Any]) -> TtsAudioType:
         """Synthesise and return ``("mp3", bytes)``."""
@@ -212,6 +209,13 @@ class _Recorder:
         except Exception:
             pass
         return self.text
+
+
+def _voice_label(v: dict[str, str]) -> str:
+    """``Mina (female)`` for built-ins, ``★ Lukas (cloned)`` for custom voices."""
+    if v.get("gender") == "custom":
+        return f"★ {v.get('name') or v['id']} (cloned)"
+    return f"{v['id']} ({v['gender']})" if v.get("gender") else v["id"]
 
 
 def _clamp_speed(value: Any) -> float:
