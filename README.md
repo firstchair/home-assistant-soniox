@@ -1,3 +1,5 @@
+<img src="custom_components/soniox/brand/icon.png" width="96" align="right" alt="Soniox integration icon">
+
 # Soniox for Home Assistant
 
 Speech-to-text **and** text-to-speech for the Home Assistant Assist pipeline, backed by [Soniox](https://soniox.com): one multilingual real-time model for 60+ languages, semantic context for names and product terms, and studio voices that speak every supported language.
@@ -24,6 +26,8 @@ Extras the stock providers do not have:
 - A Soniox account with a funded balance (Soniox no longer hands out free credits) and an API key from <https://console.soniox.com>
 
 ## Installation
+
+Releases are tagged; HACS offers the latest release as the version to install.
 
 ### HACS
 
